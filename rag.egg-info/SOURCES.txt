@@ -1,8 +1,0 @@
-setup.py
-rag/__init__.py
-rag/rag.py
-rag.egg-info/PKG-INFO
-rag.egg-info/SOURCES.txt
-rag.egg-info/dependency_links.txt
-rag.egg-info/requires.txt
-rag.egg-info/top_level.txt
