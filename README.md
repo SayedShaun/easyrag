@@ -37,8 +37,9 @@ rag = RAG(
 rag.retrieve_answer("what skills she has?")
 
 # Response
-Donna Robbins has skills in Microsoft NAV Dynamics, Cashflow planning & management, State & federal tax codes, Bookkeeping, Exceptional communication, and Fluent in German.
-
+"Donna Robbins has skills in Microsoft NAV Dynamics,
+Cashflow planning & management, State & federal tax codes,
+Bookkeeping, Exceptional communication, and Fluent in German."
 ```
 
 ## Contributing
