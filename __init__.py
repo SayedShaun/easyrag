@@ -1,1 +1,1 @@
-from rag import RAG
+from pyrag.rag import RAG
