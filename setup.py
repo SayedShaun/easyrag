@@ -9,7 +9,7 @@ setup(
         "pypdf",
         "torch",
         "transformers",
-        "faiss-cpu",
+        "faiss-gpu",
         "sentence-transformers",
         "bitsandbytes",
         "accelerate"
