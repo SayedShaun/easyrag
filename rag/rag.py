@@ -24,8 +24,8 @@ class RAG:
         self.__hf_token = hf_token
         self.__pdf_path = pdf_path
         self.__max_token = max_token
-        self.__transform_and_store()
-        self.__huggingface_llm()
+        self.__vector_store = self.__transform_and_store()
+        self.__llm = self.__huggingface_llm()
 
     def __huggingface_llm(self):
         """
@@ -81,7 +81,6 @@ class RAG:
         of the PDF file located at the specified `pdf_path`.
         """
         raw_texts = ""
-        pdf_reader = None
         try:
             pdf_reader = PdfReader(pdf_path)
             for page in pdf_reader.pages:
@@ -90,14 +89,11 @@ class RAG:
                     raw_texts += content
         except Exception as e:
             print("An error occurred while processing the PDF:", e)
-        finally:
-            if pdf_reader is not None:
-                pdf_reader.close()
 
         return raw_texts
 
     
-    def _weblink_loader(self):
+    def __weblink_loader(self):
         pass
 
     def __transform_and_store(self):
@@ -126,8 +122,8 @@ class RAG:
         each line of the final part of the answer
         """
         chain = ConversationalRetrievalChain.from_llm(
-            self.__huggingface_llm, 
-            self.__transform_and_store.as_retriever(), 
+            self.__llm, 
+            self.__vector_store.as_retriever(), 
             return_source_documents=True
         )
 
@@ -140,8 +136,3 @@ class RAG:
 
         for x in text_store[-1].split("\n"):
             print(x)
-
-
-rag = RAG()
-
-rag.
