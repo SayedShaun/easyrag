@@ -50,4 +50,5 @@ We welcome contributions from the community to enhance RAG's functionality, impr
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ---
