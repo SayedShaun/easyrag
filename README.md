@@ -49,6 +49,5 @@ Bookkeeping, Exceptional communication, and Fluent in German.
 We welcome contributions from the community to enhance RAG's functionality, improve its performance, or fix any issues. To contribute, please follow these steps:
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 ---
