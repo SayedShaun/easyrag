@@ -1,10 +1,15 @@
 from setuptools import setup, find_packages
 
+VERSION = '0.0.1' 
+DESCRIPTION = 'RAG Python Package'
+
 setup(
-    name="pyrag",
-    version=0.1,
+    name="rag",
+    author="Sayed Shaun"
+    version=VERSION,
     packages=find_packages(),
-    install_requires=[
+    description=DESCRIPTION,
+    requires=[
         "langchain",
         "pypdf",
         "torch",
@@ -13,6 +18,6 @@ setup(
         "sentence-transformers",
         "bitsandbytes",
         "accelerate"
-    ]
+    ],
 )
 
