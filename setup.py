@@ -5,11 +5,11 @@ DESCRIPTION = 'RAG Python Package'
 
 setup(
     name="rag",
-    author="Sayed Shaun"
+    author="Sayed Shaun",
     version=VERSION,
     packages=find_packages(),
     description=DESCRIPTION,
-    requires=[
+    install_requires=[
         "langchain",
         "pypdf",
         "torch",
