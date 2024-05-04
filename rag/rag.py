@@ -25,16 +25,16 @@ def pdf_loader(pdf_path):
     located at the `pdf_path` provided as input. If there is an error during the processing of the PDF
     file, it will print an error message and return an empty string.
     """
-        raw_texts = ""
-        try:
-            pdf_reader = PdfReader(pdf_path)
-            for page in pdf_reader.pages:
-                content = page.extract_text()
-                if content:
-                    raw_texts += content
-        except Exception as e:
-            print("An error occurred while processing the PDF:", e)
-        return raw_texts
+    raw_texts = ""
+    try:
+        pdf_reader = PdfReader(pdf_path)
+        for page in pdf_reader.pages:
+            content = page.extract_text()
+            if content:
+                raw_texts += content
+    except Exception as e:
+        print("An error occurred while processing the PDF:", e)
+    return raw_texts
     
     
 def transform_and_store(raw_texts, embedding, db_name=None):
