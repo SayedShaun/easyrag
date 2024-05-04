@@ -161,12 +161,7 @@ class OpensourceModel:
         an answer and then prints the answer line by line
         :type query: str
         """
-        chain = ConversationalRetrievalChain.from_llm(
-            self.__llm, 
-            self.__vector_store.as_retriever(), 
-            return_source_documents=True
-        )
-
+        chain = ConversationalRetrievalChain.from_llm(self.__llm, self.__vector_store.as_retriever(), return_source_documents=True)
         chat_history = []
         answer = chain({"question": query, "chat_history": chat_history})
         
@@ -179,12 +174,12 @@ class OpensourceModel:
 
 
 class GoogleGemini:
-    def __init__(self, pdf_path:str, google_api_key:str):
-        self.__llm, embedding = self.__google_gen_ai(google_api_key)
+    def __init__(self, pdf_path:str, google_api_key:str, temperature:float=0.1, max_token:int=200):
+        self.__llm, embedding = self.__google_gen_ai(google_api_key, temperature, max_token)
         raw_texts = pdf_loader(pdf_path)
         self.__vector_store = transform_and_store(raw_texts, embedding)
 
-    def __google_gen_ai(self, api_key:str)->Tuple:
+    def __google_gen_ai(self, api_key:str, temperature:float, max_token:int)->Tuple:
         """
         The function `__google_gen_ai` initializes instances of GoogleGenerativeAI and
         GoogleGenerativeAIEmbeddings using the provided API key.
@@ -197,7 +192,7 @@ class GoogleGemini:
         class with the model "gemini-pro" and `embedding` which is an instance of the
         GoogleGenerativeAIEmbeddings class with the model "models/embedding-001".
         """
-        llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=api_key)
+        llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=api_key, temperature=temperature, max_output_tokens=max_token)
         embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
         return llm, embedding
     
@@ -212,16 +207,20 @@ class GoogleGemini:
         printed out line by line
         :type query: str
         """
-        chain = ConversationalRetrievalChain.from_llm(
-            self.__llm, 
-            self.__vector_store.as_retriever(), 
-            return_source_documents=True
-        )
+        chain = ConversationalRetrievalChain.from_llm(self.__llm, self.__vector_store.as_retriever(), return_source_documents=True)
         chat_history = []
         answer = chain({"question": query, "chat_history": chat_history})
         
         for text in answer["answer"].split("\n"):
             print(text)
+
+
+rag = GoogleGemini(
+    pdf_path="donna robbins.pdf",
+    google_api_key="AIzaSyB6jByhOklHr1UP4DqsjkMMCN9S40aqVXY",
+)
+
+rag.retrieve_answer("tell me about the candidet")
 
 
 class OpenAI:
@@ -248,11 +247,7 @@ class OpenAI:
         return llm, embedding
     
     def retrieve_answer(self, query:str):
-        chain = ConversationalRetrievalChain.from_llm(
-            self.__llm, 
-            self.__vector_store.as_retriever(), 
-            return_source_documents=True
-        )
+        chain = ConversationalRetrievalChain.from_llm(self.__llm, self.__vector_store.as_retriever(), return_source_documents=True)
         chat_history = []
         answer = chain({"question": query, "chat_history": chat_history})
         
