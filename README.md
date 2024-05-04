@@ -23,10 +23,10 @@ pip install git+https://github.com/SayedShaun/pyrag.git
 Using RAG is straightforward. Here's a basic example of how to use it:
 
 ```python
-from rag import RAG
+from rag import OpenSourceModel
 
 # Initialize and Provide a PDF file and Hugging Face model
-rag = RAG(
+rag = OpenSourceModel(
     model_id="meta-llama/Meta-Llama-3-8B-Instruct",
     embedding_model="sentence-transformers/all-mpnet-base-v2",
     hf_token="your huggingface token",
