@@ -145,7 +145,8 @@ class OpensourceModel:
             return_full_text = True,
             temperature=temperature,
             max_new_tokens=max_token,
-            repetition_penalty=1
+            repetition_penalty=1,
+            trust_remote_code=True
         )
         llm = HuggingFacePipeline(pipeline=hf_pipeline)
         embedding = HuggingFaceEmbeddings(model_name=embedding_model, model_kwargs={"device":"cuda"})
