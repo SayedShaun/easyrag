@@ -8,7 +8,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores.faiss import FAISS
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
-from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
+from langchain_google_genai.llms import GoogleGenerativeAI
 from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
 from langchain.chat_models.openai import ChatOpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -208,7 +208,7 @@ class GoogleGemini:
             google_api_key: SecretStr,
             temperature: float = 0.1,
             max_token: int = 200
-    ) -> None:
+        ) -> None:
         self.__llm, embedding = self.__google_gen_ai(
             google_api_key,
             temperature,
@@ -222,7 +222,7 @@ class GoogleGemini:
             api_key: SecretStr,
             temperature: float,
             max_token: int
-    ) -> Tuple:
+        ) -> Tuple:
         """
         The function `__google_gen_ai` initializes instances of GoogleGenerativeAI and
         GoogleGenerativeAIEmbeddings using the provided API key.
@@ -235,7 +235,7 @@ class GoogleGemini:
         class with the model "gemini-pro" and `embedding` which is an instance of the
         GoogleGenerativeAIEmbeddings class with the model "models/embedding-001".
         """
-        llm = ChatGoogleGenerativeAI(
+        llm = GoogleGenerativeAI(
             model="gemini-pro",
             google_api_key=api_key,
             temperature=temperature,
