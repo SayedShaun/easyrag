@@ -14,7 +14,7 @@ setup(
         "pypdf",
         "torch",
         "transformers",
-        "faiss-gpu",
+        "faiss-cpu",
         "sentence-transformers",
         "bitsandbytes",
         "accelerate"
