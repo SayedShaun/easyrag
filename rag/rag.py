@@ -215,14 +215,6 @@ class GoogleGemini:
             print(text)
 
 
-rag = GoogleGemini(
-    pdf_path="donna robbins.pdf",
-    google_api_key="AIzaSyB6jByhOklHr1UP4DqsjkMMCN9S40aqVXY",
-)
-
-rag.retrieve_answer("tell me about the candidet")
-
-
 class OpenAI:
     def __init__(self, pdf_path:str, openai_api_key:str):
         self.__llm, embedding = self.__openai(openai_api_key)
