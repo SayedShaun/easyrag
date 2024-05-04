@@ -15,6 +15,16 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 
 
 def pdf_loader(pdf_path):
+    """
+    The function `pdf_loader` loads text content from a PDF file and returns it as a single string.
+    
+    :param pdf_path: The `pdf_loader` function you provided seems to be a Python function that loads
+    text content from a PDF file using the `PyPDF2` library. It reads each page of the PDF and extracts
+    the text content from it
+    :return: The function `pdf_loader` returns a string containing the extracted text from the PDF file
+    located at the `pdf_path` provided as input. If there is an error during the processing of the PDF
+    file, it will print an error message and return an empty string.
+    """
         raw_texts = ""
         try:
             pdf_reader = PdfReader(pdf_path)
@@ -28,6 +38,23 @@ def pdf_loader(pdf_path):
     
     
 def transform_and_store(raw_texts, embedding, db_name=None):
+    """
+    The function `transform_and_store` takes raw texts, splits them into chunks, converts them into
+    vectors using a specified embedding, and stores the vectors in a database using FAISS.
+    
+    :param raw_texts: Raw_texts is the input text data that you want to transform and store. It can be a
+    single text or a collection of texts that you want to process
+    :param embedding: The `embedding` parameter in the `transform_and_store` function likely refers to a
+    method of representing text data in a numerical format. Embeddings are commonly used in natural
+    language processing tasks to convert words or sentences into dense vectors that capture semantic
+    relationships
+    :param db_name: The `db_name` parameter in the `transform_and_store` function is used to specify the
+    name of the database where the vectors will be stored. If no `db_name` is provided, the vectors will
+    still be stored but the database name will be default or unspecified. It is optional and can
+    :return: The function `transform_and_store` returns a vector store created using the FAISS library
+    from the input raw texts after splitting them into chunks and processing them with the specified
+    embedding.
+    """
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
     chunk_texts = text_splitter.split_text(raw_texts)
     vector_store = FAISS.from_texts(chunk_texts, embedding=embedding)
@@ -59,6 +86,36 @@ class OpensourceModel:
      
 
     def __huggingface_llm(self, model_id:str, embedding_model:str, temperature:float, max_token:int, hf_token:str)->Tuple:
+        """
+        The function `__huggingface_llm` initializes a Hugging Face language model and embedding model
+        for text generation tasks with specific configurations.
+        
+        :param model_id: The `model_id` parameter is the identifier or name of the pre-trained language
+        model that you want to use for text generation. This could be a model from the Hugging Face
+        model hub, such as "gpt2", "distilgpt2", "t5-small", etc
+        :type model_id: str
+        :param embedding_model: The `embedding_model` parameter refers to the name or identifier of the
+        embedding model that you want to use for the Hugging Face Language Model (LLM) pipeline. This
+        model will be responsible for converting input text into numerical embeddings that can be
+        processed by the language model
+        :type embedding_model: str
+        :param temperature: The `temperature` parameter in the function `__huggingface_llm` is used in
+        text generation models to control the randomness of the generated text. A higher temperature
+        value will result in more diverse and creative outputs, while a lower temperature value will
+        produce more conservative and predictable outputs. It essentially scales
+        :type temperature: float
+        :param max_token: The `max_token` parameter in the function `__huggingface_llm` specifies the
+        maximum number of tokens that the text generation model will produce. This parameter controls
+        the length of the generated text output
+        :type max_token: int
+        :param hf_token: The `hf_token` parameter in the code snippet you provided is used as a token
+        for the Hugging Face model. It is passed to the `AutoConfig` and `AutoModelForCausalLM` classes
+        to specify the token for the pretrained model identified by `model_id`. This token is
+        :type hf_token: str
+        :return: The function `__huggingface_llm` returns a tuple containing two objects: `llm`, which
+        is a Hugging Face pipeline for text generation using the specified model and settings, and
+        `embedding`, which is a Hugging Face embeddings object for the specified model with CUDA device.
+        """
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True, 
             bnb_4bit_compute_dtype=torch.bfloat16, 
@@ -95,6 +152,15 @@ class OpensourceModel:
         return llm, embedding
     
     def retrieve_answer(self, query:str):
+        """
+        The function retrieves and prints the helpful answer from a conversational retrieval chain based
+        on a given query.
+        
+        :param query: The code you provided seems to be a method for retrieving answers using a
+        Conversational Retrieval Chain. When a query is passed to this method, it uses the chain to find
+        an answer and then prints the answer line by line
+        :type query: str
+        """
         chain = ConversationalRetrievalChain.from_llm(
             self.__llm, 
             self.__vector_store.as_retriever(), 
@@ -119,11 +185,33 @@ class GoogleGemini:
         self.__vector_store = transform_and_store(raw_texts, embedding)
 
     def __google_gen_ai(self, api_key:str)->Tuple:
+        """
+        The function `__google_gen_ai` initializes instances of GoogleGenerativeAI and
+        GoogleGenerativeAIEmbeddings using the provided API key.
+        
+        :param api_key: The `api_key` parameter is a string that represents the API key required to
+        access the Google Generative AI services. This key is used for authentication and authorization
+        purposes when making requests to the Google Generative AI API
+        :type api_key: str
+        :return: A tuple containing two instances: `llm` which is an instance of the GoogleGenerativeAI
+        class with the model "gemini-pro" and `embedding` which is an instance of the
+        GoogleGenerativeAIEmbeddings class with the model "models/embedding-001".
+        """
         llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=api_key)
         embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
         return llm, embedding
     
     def retrieve_answer(self, query:str):
+        """
+        The function retrieves an answer to a query using a conversational retrieval chain and prints
+        the answer text line by line.
+        
+        :param query: The `retrieve_answer` function takes a query as input, which is a string
+        representing the question that the user wants to retrieve an answer for. The function then uses
+        a ConversationalRetrievalChain to retrieve the answer based on the query. The answer is then
+        printed out line by line
+        :type query: str
+        """
         chain = ConversationalRetrievalChain.from_llm(
             self.__llm, 
             self.__vector_store.as_retriever(), 
@@ -143,6 +231,18 @@ class OpenAI:
         self.__vector_store = transform_and_store(raw_texts, embedding)
 
     def __openai(self, api_key:str)->Tuple:
+        """
+        The function `__openai` takes an API key as input and returns instances of the ChatOpenAI and
+        OpenAIEmbeddings classes initialized with the provided API key.
+        
+        :param api_key: The `api_key` parameter is a string that represents the API key required to
+        access the OpenAI services. This key is used for authentication and authorization purposes when
+        making requests to the OpenAI API
+        :type api_key: str
+        :return: A tuple containing two objects: a ChatOpenAI model initialized with the "gpt-3.5-turbo"
+        model and a Google API key, and an OpenAIEmbeddings model initialized with the
+        "text-embedding-ada-002" model and a Google API key.
+        """
         llm = ChatOpenAI(model="gpt-3.5-turbo", google_api_key=api_key)
         embedding = OpenAIEmbeddings(model="text-embedding-ada-002", google_api_key=api_key)
         return llm, embedding
