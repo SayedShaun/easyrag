@@ -11,6 +11,7 @@ setup(
     description=DESCRIPTION,
     install_requires=[
         "langchain",
+        "langchain_google_genai",
         "pypdf",
         "torch",
         "transformers",
