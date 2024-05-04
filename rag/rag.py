@@ -56,9 +56,15 @@ def transform_and_store(raw_texts, embedding, db_name=None):
     from the input raw texts after splitting them into chunks and processing them with the specified
     embedding.
     """
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, 
+        chunk_overlap=20
+    )
     chunk_texts = text_splitter.split_text(raw_texts)
-    vector_store = FAISS.from_texts(chunk_texts, embedding=embedding)
+    vector_store = FAISS.from_texts(
+        chunk_texts, 
+        embedding=embedding
+    )
     return vector_store
 
 
@@ -72,21 +78,32 @@ class OpensourceModel:
             temperature:float=0.5, 
             max_token:int = 200
         )->None:
-        self.__pdf_path = pdf_path
-        self.__max_token = max_token
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         if device.type == "cuda":
             self.__llm, embedding = self.__huggingface_llm(
-                model_id, embedding_model, temperature, max_token, hf_token)
+                model_id, 
+                embedding_model, 
+                temperature, 
+                max_token, 
+                hf_token
+            )
         else:
             raise RuntimeError(
-                "Please use GPU to use the Open-Source model or Use API Based Model(E.g. GoogleGemini, OpenAI)")
+                """Please use GPU to use the Open-Source model 
+                or Use API Based Model(E.g. GoogleGemini, OpenAI)"""
+        )
         
         raw_texts = pdf_loader(pdf_path)
         self.__vector_store = transform_and_store(raw_texts, embedding)
      
 
-    def __huggingface_llm(self, model_id:str, embedding_model:str, temperature:float, max_token:int, hf_token:SecretStr)->Tuple:
+    def __huggingface_llm(
+            self, model_id:str, 
+            embedding_model:str, 
+            temperature:float, 
+            max_token:int, 
+            hf_token:SecretStr
+        )->Tuple:
         """
         The function `__huggingface_llm` initializes a Hugging Face model for text generation with
         specified configurations and returns the model and tokenizer.
@@ -154,7 +171,10 @@ class OpensourceModel:
             trust_remote_code=True
         )
         llm = HuggingFacePipeline(pipeline=hf_pipeline)
-        embedding = HuggingFaceEmbeddings(model_name=embedding_model, model_kwargs={"device":"cuda"})
+        embedding = HuggingFaceEmbeddings(
+            model_name=embedding_model, 
+            model_kwargs={"device":"cuda"}
+        )
         return llm, embedding
     
     def retrieve_answer(self, query:str):
@@ -167,7 +187,11 @@ class OpensourceModel:
         an answer and then prints the answer line by line
         :type query: str
         """
-        chain = ConversationalRetrievalChain.from_llm(self.__llm, self.__vector_store.as_retriever(), return_source_documents=True)
+        chain = ConversationalRetrievalChain.from_llm(
+            self.__llm, 
+            self.__vector_store.as_retriever(), 
+            return_source_documents=True
+        )
         chat_history = []
         answer = chain({"question": query, "chat_history": chat_history})
         
@@ -180,12 +204,27 @@ class OpensourceModel:
 
 
 class GoogleGemini:
-    def __init__(self, pdf_path:str, google_api_key:SecretStr, temperature:float=0.1, max_token:int=200)->None:
-        self.__llm, embedding = self.__google_gen_ai(google_api_key, temperature, max_token)
+    def __init__(
+            self, 
+            pdf_path:str, 
+            google_api_key:SecretStr, 
+            temperature:float=0.1, 
+            max_token:int=200
+        )->None:
+        self.__llm, embedding = self.__google_gen_ai(
+            google_api_key, 
+            temperature, 
+            max_token
+        )
         raw_texts = pdf_loader(pdf_path)
         self.__vector_store = transform_and_store(raw_texts, embedding)
 
-    def __google_gen_ai(self, api_key:SecretStr, temperature:float, max_token:int)->Tuple:
+    def __google_gen_ai(
+            self, 
+            api_key:SecretStr, 
+            temperature:float, 
+            max_token:int
+        )->Tuple:
         """
         The function `__google_gen_ai` initializes instances of GoogleGenerativeAI and
         GoogleGenerativeAIEmbeddings using the provided API key.
@@ -198,8 +237,16 @@ class GoogleGemini:
         class with the model "gemini-pro" and `embedding` which is an instance of the
         GoogleGenerativeAIEmbeddings class with the model "models/embedding-001".
         """
-        llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key, temperature=temperature, max_output_tokens=max_token)
-        embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-pro", 
+            google_api_key=api_key, 
+            temperature=temperature, 
+            max_output_tokens=max_token
+        )
+        embedding = GoogleGenerativeAIEmbeddings(
+            model="models/embedding-001", 
+            google_api_key=api_key
+        )
         return llm, embedding
     
     def retrieve_answer(self, query:str):
@@ -213,7 +260,11 @@ class GoogleGemini:
         printed out line by line
         :type query: str
         """
-        chain = ConversationalRetrievalChain.from_llm(self.__llm, self.__vector_store.as_retriever(), return_source_documents=True)
+        chain = ConversationalRetrievalChain.from_llm(
+            self.__llm, 
+            self.__vector_store.as_retriever(), 
+            return_source_documents=True
+        )
         chat_history = []
         answer = chain({"question": query, "chat_history": chat_history})
         
@@ -241,11 +292,17 @@ class OpenAI:
         "text-embedding-ada-002" model and a Google API key.
         """
         llm = ChatOpenAI(model="gpt-3.5-turbo", google_api_key=api_key)
-        embedding = OpenAIEmbeddings(model="text-embedding-ada-002", google_api_key=api_key)
+        embedding = OpenAIEmbeddings(
+            model="text-embedding-ada-002", google_api_key=api_key
+        )
         return llm, embedding
     
     def retrieve_answer(self, query:str):
-        chain = ConversationalRetrievalChain.from_llm(self.__llm, self.__vector_store.as_retriever(), return_source_documents=True)
+        chain = ConversationalRetrievalChain.from_llm(
+            self.__llm, 
+            self.__vector_store.as_retriever(), 
+            return_source_documents=True
+        )
         chat_history = []
         answer = chain({"question": query, "chat_history": chat_history})
         
