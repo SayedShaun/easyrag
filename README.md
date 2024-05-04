@@ -30,7 +30,7 @@ rag = OpenSourceModel(
     model_id="meta-llama/Meta-Llama-3-8B-Instruct",
     embedding_model="sentence-transformers/all-mpnet-base-v2",
     hf_token="your huggingface token",
-    pdf_path="/kaggle/input/sample-resume/donna robbins.pdf"
+    pdf_path="your pdf file path"
 )
 
 # Retrieve data from the PDF
