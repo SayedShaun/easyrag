@@ -15,7 +15,7 @@ RAG is a Python package designed to facilitate information retrieval and generat
 To install RAG, clone the repository and install the required dependencies:
 
 ```bash
-pip install git+https://github.com/SayedShaun/pyrag.git
+pip install git+https://github.com/SayedShaun/python-rag.git
 ```
 
 ## Usage
@@ -43,6 +43,9 @@ Cashflow planning & management, State & federal tax codes,
 Bookkeeping, Exceptional communication, and Fluent in German.
 """
 ```
+
+## Warning
+The "Rag" framework is designed for quick rag prototype and to check compatibility with different open source models, including Llama, Mistral, Phi, and other 3 to 10 billion parameter models. All models might not be compatible also the GoogleGemini and OpenAI classes are unstable at this moment.
 
 ## Contributing
 
