@@ -1,4 +1,5 @@
 from typing import Tuple
+from pydantic import SecretStr
 import torch
 from transformers import BitsAndBytesConfig, AutoConfig, AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.llms.huggingface_pipeline import HuggingFacePipeline
@@ -7,7 +8,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores.faiss import FAISS
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
-from langchain_google_genai.llms import GoogleGenerativeAI
+from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
 from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
 from langchain.chat_models.openai import ChatOpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -67,7 +68,7 @@ class OpensourceModel:
             pdf_path:str,
             model_id:str=None, 
             embedding_model:str=None, 
-            hf_token:str=None, 
+            hf_token:SecretStr=None, 
             temperature:float=0.5, 
             max_token:int = 200
         )->None:
@@ -79,25 +80,25 @@ class OpensourceModel:
                 model_id, embedding_model, temperature, max_token, hf_token)
         else:
             raise RuntimeError(
-                "Please use GPU to use the open-source model or Use API Based Model(E.g. GoogleGemini, OpenAI)")
+                "Please use GPU to use the Open-Source model or Use API Based Model(E.g. GoogleGemini, OpenAI)")
         
         raw_texts = pdf_loader(pdf_path)
         self.__vector_store = transform_and_store(raw_texts, embedding)
      
 
-    def __huggingface_llm(self, model_id:str, embedding_model:str, temperature:float, max_token:int, hf_token:str)->Tuple:
+    def __huggingface_llm(self, model_id:str, embedding_model:str, temperature:float, max_token:int, hf_token:SecretStr)->Tuple:
         """
-        The function `__huggingface_llm` initializes a Hugging Face language model and embedding model
-        for text generation tasks with specific configurations.
+        The function `__huggingface_llm` initializes a Hugging Face model for text generation with
+        specified configurations and returns the model and tokenizer.
         
-        :param model_id: The `model_id` parameter is the identifier or name of the pre-trained language
-        model that you want to use for text generation. This could be a model from the Hugging Face
-        model hub, such as "gpt2", "distilgpt2", "t5-small", etc
+        :param model_id: The `model_id` parameter in the function `__huggingface_llm` is used to specify
+        the identifier or name of the pre-trained language model that you want to load for text
+        generation. This could be the name of a specific model like "gpt2" or a custom model identifier
         :type model_id: str
         :param embedding_model: The `embedding_model` parameter refers to the name or identifier of the
-        embedding model that you want to use for the Hugging Face Language Model (LLM) pipeline. This
-        model will be responsible for converting input text into numerical embeddings that can be
-        processed by the language model
+        Hugging Face model that will be used for generating embeddings. This model will be responsible
+        for converting input text into numerical representations that capture the semantic meaning of
+        the text
         :type embedding_model: str
         :param temperature: The `temperature` parameter in the function `__huggingface_llm` is used in
         text generation models to control the randomness of the generated text. A higher temperature
@@ -108,13 +109,13 @@ class OpensourceModel:
         maximum number of tokens that the text generation model will produce. This parameter controls
         the length of the generated text output
         :type max_token: int
-        :param hf_token: The `hf_token` parameter in the code snippet you provided is used as a token
-        for the Hugging Face model. It is passed to the `AutoConfig` and `AutoModelForCausalLM` classes
-        to specify the token for the pretrained model identified by `model_id`. This token is
+        :param hf_token: The `hf_token` parameter in the function `__huggingface_llm` is used as a token
+        for the Hugging Face model. It is typically a string that represents the specific token or model
+        configuration you want to use. This token is used when loading the model and tokenizer from the
+        H
         :type hf_token: str
-        :return: The function `__huggingface_llm` returns a tuple containing two objects: `llm`, which
-        is a Hugging Face pipeline for text generation using the specified model and settings, and
-        `embedding`, which is a Hugging Face embeddings object for the specified model with CUDA device.
+        :return: A tuple containing an instance of the HuggingFacePipeline (`llm`) and an instance of
+        the HuggingFaceEmbeddings (`embedding`) is being returned.
         """
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True, 
@@ -122,10 +123,12 @@ class OpensourceModel:
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_type="nf4"
         )
+
         model_config = AutoConfig.from_pretrained(
             pretrained_model_name_or_path = model_id, 
             token=hf_token
         )
+
         model = AutoModelForCausalLM.from_pretrained(
             pretrained_model_name_or_path = model_id,
             token=hf_token,
@@ -134,10 +137,12 @@ class OpensourceModel:
             device_map="auto",
             trust_remote_code=True
         )
+
         tokenizer = AutoTokenizer.from_pretrained(
             pretrained_model_name_or_path = model_id,
             token=hf_token
         )
+        
         hf_pipeline = pipeline(
             model = model,
             task="text-generation",
@@ -175,12 +180,12 @@ class OpensourceModel:
 
 
 class GoogleGemini:
-    def __init__(self, pdf_path:str, google_api_key:str, temperature:float=0.1, max_token:int=200):
+    def __init__(self, pdf_path:str, google_api_key:SecretStr, temperature:float=0.1, max_token:int=200)->None:
         self.__llm, embedding = self.__google_gen_ai(google_api_key, temperature, max_token)
         raw_texts = pdf_loader(pdf_path)
         self.__vector_store = transform_and_store(raw_texts, embedding)
 
-    def __google_gen_ai(self, api_key:str, temperature:float, max_token:int)->Tuple:
+    def __google_gen_ai(self, api_key:SecretStr, temperature:float, max_token:int)->Tuple:
         """
         The function `__google_gen_ai` initializes instances of GoogleGenerativeAI and
         GoogleGenerativeAIEmbeddings using the provided API key.
@@ -193,7 +198,7 @@ class GoogleGemini:
         class with the model "gemini-pro" and `embedding` which is an instance of the
         GoogleGenerativeAIEmbeddings class with the model "models/embedding-001".
         """
-        llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=api_key, temperature=temperature, max_output_tokens=max_token)
+        llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key, temperature=temperature, max_output_tokens=max_token)
         embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
         return llm, embedding
     
@@ -217,12 +222,12 @@ class GoogleGemini:
 
 
 class OpenAI:
-    def __init__(self, pdf_path:str, openai_api_key:str):
+    def __init__(self, pdf_path:str, openai_api_key:SecretStr)->None:
         self.__llm, embedding = self.__openai(openai_api_key)
         raw_texts = pdf_loader(pdf_path)
         self.__vector_store = transform_and_store(raw_texts, embedding)
 
-    def __openai(self, api_key:str)->Tuple:
+    def __openai(self, api_key:SecretStr)->Tuple:
         """
         The function `__openai` takes an API key as input and returns instances of the ChatOpenAI and
         OpenAIEmbeddings classes initialized with the provided API key.
