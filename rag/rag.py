@@ -75,8 +75,8 @@ class OpensourceModel:
             self,
             pdf_path: str,
             model_id: str = None,
-            embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
             hf_token: SecretStr = None,
+            embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
             temperature: float = 0.5,
             max_token: int = 200
     ) -> None:
