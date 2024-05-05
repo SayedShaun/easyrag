@@ -25,6 +25,9 @@ def pdf_loader(pdf_path):
     located at the `pdf_path` provided as input. If there is an error during the processing of the PDF
     file, it will print an error message and return an empty string.
     """
+    if pdf_path is None:
+        raise ValueError("Please Provide PDF file")
+    
     raw_texts = ""
     try:
         pdf_reader = PdfReader(pdf_path)
@@ -194,7 +197,7 @@ class OpensourceModel:
         answer = chain({"question": query, "chat_history": chat_history})
 
         text_store = []
-        for text in answer["answer"].split("Helpful Answer: "):
+        for text in answer["answer"].split("Helpful Answer:"):
             text_store.append(text)
 
         for x in text_store[-1].split("\n"):
