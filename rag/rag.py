@@ -169,8 +169,10 @@ class OpensourceModel:
             temperature=temperature,
             max_new_tokens=max_token,
             repetition_penalty=1,
-            trust_remote_code=True
+            trust_remote_code=True,
+            do_sample=False
         )
+        
         llm = HuggingFacePipeline(pipeline=hf_pipeline)
         embedding = HuggingFaceEmbeddings(
             model_name=embedding_model,
@@ -202,6 +204,9 @@ class OpensourceModel:
 
         for x in text_store[-1].split("\n"):
             print(x)
+        
+        #clear memory cache    
+        torch.cuda.empty_cache()
 
 
 class GoogleGemini:
