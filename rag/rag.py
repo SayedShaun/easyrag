@@ -81,7 +81,7 @@ class OpensourceModel:
             hf_token: SecretStr = None,
             embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
             temperature: float = 0.5,
-            max_token: int = 200
+            max_token: int = 1000
     ) -> None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         if device.type == "cuda":
