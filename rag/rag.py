@@ -12,6 +12,8 @@ from langchain_google_genai.llms import GoogleGenerativeAI
 from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
 from langchain.chat_models.openai import ChatOpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
+import sys
+import os
 
 
 def pdf_loader(pdf_path):
@@ -37,6 +39,7 @@ def pdf_loader(pdf_path):
                 raw_texts += content
     except Exception as e:
         print("An error occurred while processing the PDF:", e)
+        sys.exit(1)
     return raw_texts
 
 
@@ -153,7 +156,8 @@ class OpensourceModel:
             config=model_config,
             quantization_config=bnb_config,
             device_map="auto",
-            trust_remote_code=True
+            trust_remote_code=True,
+            cache_dir=os.getcwd()
         )
 
         tokenizer = AutoTokenizer.from_pretrained(
