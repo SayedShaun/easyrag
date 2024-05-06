@@ -73,7 +73,7 @@ def transform_and_store(raw_texts, embedding, db_name=None):
     return vector_store
 
 
-class OpensourceModel:
+class OpenSourceModel:
     def __init__(
             self,
             pdf_path: str,
