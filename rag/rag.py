@@ -73,7 +73,7 @@ def transform_and_store(raw_texts, embedding, db_name=None):
     return vector_store
 
 
-class OpensourceModel:
+class HuggingFaceModel:
     def __init__(
             self,
             pdf_path: str,
@@ -220,7 +220,7 @@ class GoogleGemini:
             google_api_key: SecretStr,
             temperature: float = 0.1,
             max_token: int = 200
-        ) -> None:
+    ) -> None:
         self.__llm, embedding = self.__google_gen_ai(
             google_api_key,
             temperature,
@@ -234,7 +234,7 @@ class GoogleGemini:
             api_key: SecretStr,
             temperature: float,
             max_token: int
-        ) -> Tuple:
+    ) -> Tuple:
         """
         The function `__google_gen_ai` initializes instances of GoogleGenerativeAI and
         GoogleGenerativeAIEmbeddings using the provided API key.
