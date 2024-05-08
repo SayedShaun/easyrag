@@ -1,6 +1,6 @@
 ---
 
-# RAG Python Package
+# EasyRAG Python Package
 
 RAG is a Python package designed to facilitate information retrieval and generation tasks, particularly in natural language processing applications. With RAG, users can input a PDF file along with a Hugging Face model, enabling the extraction of relevant data from the PDF and responding to user queries based on the extracted information.
 
@@ -15,7 +15,7 @@ RAG is a Python package designed to facilitate information retrieval and generat
 To install rag, paste the link below into your terminal and press enter.
 
 ```bash
-pip install git+https://github.com/SayedShaun/python-rag.git
+pip install git+https://github.com/SayedShaun/easyrag.git
 ```
 
 ## Usage
@@ -44,7 +44,7 @@ Bookkeeping, Exceptional communication, and Fluent in German.
 """
 ```
 
-## Warning
+## Bugs
 The "Rag" framework is designed for quick rag prototype and to check retrieval performance with different open source models, including Llama, Mistral, Phi, and other 3 to 10 billion parameter models. It also supports Googgle Gemini and OpenAi models through API call. All open-source models might not be compatible also the GoogleGemini and OpenAI classes are unstable at this moment.
 
 ## Contributing
