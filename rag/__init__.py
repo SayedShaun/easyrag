@@ -1,1 +1,1 @@
-from .rag import OpensourceModel, GoogleGemini, OpenAI
+from .easyrag import OpensourceModel, GoogleGemini, OpenAI
