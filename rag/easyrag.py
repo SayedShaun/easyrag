@@ -4,7 +4,7 @@ import torch
 from typing import Tuple
 from pydantic import SecretStr
 from langchain.llms import HuggingFacePipeline
-from utilities import pdf_loader, transform_and_store
+from rag.utilities import pdf_loader, transform_and_store
 from transformers import (
     BitsAndBytesConfig, 
     AutoConfig, 
