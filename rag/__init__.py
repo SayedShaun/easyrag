@@ -1,1 +1,1 @@
-from .easyrag import OpensourceModel, GoogleGemini, OpenAI
+from .easyrag import HuggingFaceModel, GoogleGemini, OpenAI
