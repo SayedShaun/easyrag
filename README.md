@@ -28,7 +28,6 @@ from rag import HuggingFaceModel
 # Initialize and Provide a PDF file and Hugging Face model
 rag = HuggingFaceModel(
     model_id="meta-llama/Meta-Llama-3-8B-Instruct",
-    embedding_model="sentence-transformers/all-mpnet-base-v2",
     hf_token="your huggingface token",
     pdf_path="sample resume.pdf"
 )
