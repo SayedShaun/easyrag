@@ -1,17 +1,18 @@
 from setuptools import setup, find_packages
 
 VERSION = '0.0.1' 
-DESCRIPTION = 'RAG Python Package'
+DESCRIPTION = 'OpenRAG Python Package'
 
 setup(
-    name="easy-rag",
+    name="openrag",
     author="Sayed Shaun",
     version=VERSION,
     packages=find_packages(),
     description=DESCRIPTION,
     install_requires=[
-        "langchain==0.1.17",
-        "langchain_google_genai==1.0.3",
+        "langchain",
+        "langchain-community",
+        "langchain_google_genai",
         "pypdf",
         "torch",
         "transformers",
