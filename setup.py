@@ -2,14 +2,7 @@ import subprocess
 from setuptools import setup, find_packages
 
 
-def get_version_from_git():
-    version = subprocess.check_output(['git', 'describe', '--tags']).strip().decode('utf-8')
-    if version.startswith('v'):
-        version = version[1:]  # Remove the 'v' prefix if it exists
-    return version
-
-
-VERSION = get_version_from_git() 
+VERSION = 1.0.0 
 DESCRIPTION = 'OpenRAG Python Package'
 
 setup(
