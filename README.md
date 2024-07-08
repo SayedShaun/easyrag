@@ -1,6 +1,6 @@
 ---
 
-# EasyRAG Python Package
+# OpenRag Python Package
 
 RAG is a Python package designed to facilitate information retrieval and generation tasks, particularly in natural language processing applications. With RAG, users can input a PDF file along with a Hugging Face model, enabling the extraction of relevant data from the PDF and responding to user queries based on the extracted information.
 
