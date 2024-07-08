@@ -1,27 +1,34 @@
 
 import os
+import sys
 import torch
 from typing import Tuple
 from pydantic import SecretStr
-from langchain.llms import HuggingFacePipeline
-from rag.utilities import pdf_loader, transform_and_store
+from rag.utils import (
+    pdf_loader, 
+    store_user_chat_history, 
+    transform_and_store, 
+    get_answer
+    )
 from transformers import (
     BitsAndBytesConfig, 
     AutoConfig, 
     AutoModelForCausalLM, 
     AutoTokenizer, 
     pipeline
-)
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings import OpenAIEmbeddings
+    )
+from langchain_community.llms import HuggingFacePipeline
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.chat_models import ChatOpenAI
+from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_google_genai.llms import GoogleGenerativeAI
 from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
-from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
+from langchain_community.llms import Ollama
+from langchain_community.embeddings import OllamaEmbeddings
 
 
 
-class HuggingFaceModel:
+class RagWithHuggingFaceModel:
     def __init__(
             self,
             pdf_path: str,
@@ -30,10 +37,10 @@ class HuggingFaceModel:
             embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
             temperature: float = 0.5,
             max_token: int = 1000
-    ) -> None:
+        ) -> None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         if device.type == "cuda":
-            self.__llm, embedding = self.__huggingface_llm(
+            self._llm, embedding = self._huggingface_llm(
                 model_id,
                 embedding_model,
                 temperature,
@@ -47,15 +54,15 @@ class HuggingFaceModel:
             )
 
         raw_texts = pdf_loader(pdf_path)
-        self.__vector_store = transform_and_store(raw_texts, embedding)
+        self._vector_store = transform_and_store(raw_texts, embedding)
 
-    def __huggingface_llm(
+    def _huggingface_llm(
             self, model_id: str,
             embedding_model: str,
             temperature: float,
             max_token: int,
             hf_token: SecretStr
-    ) -> Tuple:
+        ) -> Tuple:
         """
         The function `__huggingface_llm` initializes a Hugging Face model for text generation with
         specified configurations and returns the model and tokenizer.
@@ -88,7 +95,7 @@ class HuggingFaceModel:
         """
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
-            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_compute_dtype=torch.float16,
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_type="nf4"
         )
@@ -132,57 +139,40 @@ class HuggingFaceModel:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str):
-        """
-        The function retrieves and prints the helpful answer from a conversational retrieval chain based
-        on a given query.
-        
-        :param query: The code you provided seems to be a method for retrieving answers using a
-        Conversational Retrieval Chain. When a query is passed to this method, it uses the chain to find
-        an answer and then prints the answer line by line
-        :type query: str
-        """
-        chain = ConversationalRetrievalChain.from_llm(
-            self.__llm,
-            self.__vector_store.as_retriever(),
-            return_source_documents=True
+    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+        get_answer(
+            llm_model=self._llm,
+            vector_store=self._vector_store.as_retriever(),
+            query=query,
+            continuous_chat=continuous_chat
         )
-        chat_history = []
-        answer = chain({"question": query, "chat_history": chat_history})
-
-        text_store = []
-        for text in answer["answer"].split("Helpful Answer:"):
-            text_store.append(text)
-
-        for x in text_store[-1].split("\n"):
-            print(x)
         
         #clear memory cache    
         torch.cuda.empty_cache()
 
 
-class GoogleGemini:
+class RagWithGoogleGemini:
     def __init__(
             self,
             pdf_path: str,
             google_api_key: SecretStr,
             temperature: float = 0.1,
             max_token: int = 200
-    ) -> None:
-        self.__llm, embedding = self.__google_gen_ai(
+        ) -> None:
+        self._llm, embedding = self._google_gen_ai(
             google_api_key,
             temperature,
             max_token
         )
         raw_texts = pdf_loader(pdf_path)
-        self.__vector_store = transform_and_store(raw_texts, embedding)
+        self._vector_store = transform_and_store(raw_texts, embedding)
 
-    def __google_gen_ai(
+    def _google_gen_ai(
             self,
             api_key: SecretStr,
             temperature: float,
             max_token: int
-    ) -> Tuple:
+        ) -> Tuple:
         """
         The function `__google_gen_ai` initializes instances of GoogleGenerativeAI and
         GoogleGenerativeAIEmbeddings using the provided API key.
@@ -207,36 +197,22 @@ class GoogleGemini:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str):
-        """
-        The function retrieves an answer to a query using a conversational retrieval chain and prints
-        the answer text line by line.
-        
-        :param query: The `retrieve_answer` function takes a query as input, which is a string
-        representing the question that the user wants to retrieve an answer for. The function then uses
-        a ConversationalRetrievalChain to retrieve the answer based on the query. The answer is then
-        printed out line by line
-        :type query: str
-        """
-        chain = ConversationalRetrievalChain.from_llm(
-            self.__llm,
-            self.__vector_store.as_retriever(),
-            return_source_documents=True
+    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+        get_answer(
+            llm_model=self._llm,
+            vector_store=self._vector_store.as_retriever(),
+            query=query,
+            continuous_chat=continuous_chat
         )
-        chat_history = []
-        answer = chain({"question": query, "chat_history": chat_history})
-
-        for text in answer["answer"].split("\n"):
-            print(text)
 
 
-class OpenAI:
-    def __init__(self, pdf_path: str, openai_api_key: SecretStr) -> None:
-        self.__llm, embedding = self.__openai(openai_api_key)
+class RagWithOpenAI:
+    def __init__(self, pdf_path: str, openai_api_key: SecretStr, temperature: float = 0.1) -> None:
+        self._llm, embedding = self._openai(openai_api_key, temperature)
         raw_texts = pdf_loader(pdf_path)
-        self.__vector_store = transform_and_store(raw_texts, embedding)
+        self._vector_store = transform_and_store(raw_texts, embedding)
 
-    def __openai(self, api_key: SecretStr) -> Tuple:
+    def _openai(self, api_key: SecretStr, temperature: float) -> Tuple:
         """
         The function `__openai` takes an API key as input and returns instances of the ChatOpenAI and
         OpenAIEmbeddings classes initialized with the provided API key.
@@ -249,20 +225,50 @@ class OpenAI:
         model and a Google API key, and an OpenAIEmbeddings model initialized with the
         "text-embedding-ada-002" model and a Google API key.
         """
-        llm = ChatOpenAI(model="gpt-3.5-turbo", google_api_key=api_key)
+        llm = ChatOpenAI(model="gpt-3.5-turbo", google_api_key=api_key, temperature=temperature)
         embedding = OpenAIEmbeddings(
             model="text-embedding-ada-002", google_api_key=api_key
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str):
-        chain = ConversationalRetrievalChain.from_llm(
-            self.__llm,
-            self.__vector_store.as_retriever(),
-            return_source_documents=True
+    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+        get_answer(
+            llm_model=self._llm,
+            vector_store=self._vector_store.as_retriever(),
+            query=query,
+            continuous_chat=continuous_chat
         )
-        chat_history = []
-        answer = chain({"question": query, "chat_history": chat_history})
 
-        for text in answer["answer"].split("\n"):
-            print(text)
+
+
+class RagWithOllamaLLM:
+    def __init__(
+            self, 
+            pdf_path: str, 
+            model: str = "phi3", 
+            embedding_model: str = "all-minilm", 
+            temperature: float = 0.2
+        ) -> None:
+        self._model = model
+        self._embedding_model = embedding_model
+        self._chat_history = store_user_chat_history()
+        try:
+            self._llm, embedding = self._ollama_local_llm(temperature)
+            raw_texts = pdf_loader(pdf_path)
+            self._vector_store = transform_and_store(raw_texts, embedding)
+        except Exception as e:
+            print("Make sure Ollama is running on your system.")
+            sys.exit(1)
+
+    def _ollama_local_llm(self, temperature: float)->Tuple:
+        llm = Ollama(model=self._model, temperature=temperature)
+        embedding = OllamaEmbeddings(model=self._embedding_model)
+        return llm, embedding
+
+    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+        get_answer(
+            llm_model=self._llm,
+            vector_store=self._vector_store.as_retriever(),
+            query=query,
+            continuous_chat=continuous_chat
+        )
