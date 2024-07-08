@@ -28,7 +28,6 @@ from rag import HuggingFaceModel
 # Initialize and Provide a PDF file and Hugging Face model
 rag = HuggingFaceModel(
     model_id="meta-llama/Meta-Llama-3-8B-Instruct",
-    embedding_model="sentence-transformers/all-mpnet-base-v2",
     hf_token="your huggingface token",
     pdf_path="sample resume.pdf"
 )
@@ -45,7 +44,7 @@ Bookkeeping, Exceptional communication, and Fluent in German.
 ```
 
 ## Bugs
-The "Rag" framework is designed for quick rag prototype and to check retrieval performance with different open source models, including Llama, Mistral, Phi, and other 3 to 10 billion parameter models. It also supports Googgle Gemini and OpenAi models through API call. All open-source models might not be compatible also the GoogleGemini and OpenAI classes are unstable at this moment.
+The "Rag" framework is designed for quick rag prototype and to check retrieval performance with different open source models, including Llama, Mistral, Phi, and other 1 to 10 billion parameter models. It also supports Googgle Gemini and OpenAi models through API call. All open-source models might not be compatible also the GoogleGemini and OpenAI classes are unstable at this moment.
 
 ## Contributing
 
