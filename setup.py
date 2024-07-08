@@ -5,6 +5,9 @@ subprocess.check_output(["git", "describe", "--always"])))
 VERSION = "1.0.0" 
 DESCRIPTION = 'OpenRAG Python Package'
 
+with open("README.md", "r", encoding="utf-8") as f:
+    long_description = f.read()
+
 setup(
     name="openrag",
     author="Sayed Shaun",
@@ -23,7 +26,7 @@ setup(
         "bitsandbytes",
         "accelerate"
     ],
-    long_description=open('README.md').read(),
+    long_description=long_description,
     long_description_content_type='text/markdown',
     python_requires=">=3.10",
 )
