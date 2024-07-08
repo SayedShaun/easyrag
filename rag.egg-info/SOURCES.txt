@@ -1,0 +1,11 @@
+LICENSE
+README.md
+setup.py
+easy-rag/__init__.py
+easy-rag/easyrag.py
+easy-rag/utils.py
+rag.egg-info/PKG-INFO
+rag.egg-info/SOURCES.txt
+rag.egg-info/dependency_links.txt
+rag.egg-info/requires.txt
+rag.egg-info/top_level.txt

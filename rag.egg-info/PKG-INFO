@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: rag
+Version: 0.0.1
+Summary: RAG Python Package
+Author: Sayed Shaun
+License-File: LICENSE
+Requires-Dist: langchain==0.1.17
+Requires-Dist: langchain_google_genai==1.0.3
+Requires-Dist: pypdf
+Requires-Dist: torch
+Requires-Dist: transformers
+Requires-Dist: faiss-cpu
+Requires-Dist: sentence-transformers
+Requires-Dist: bitsandbytes
+Requires-Dist: accelerate

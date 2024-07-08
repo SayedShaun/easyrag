@@ -4,7 +4,7 @@ VERSION = '0.0.1'
 DESCRIPTION = 'RAG Python Package'
 
 setup(
-    name="rag",
+    name="easy-rag",
     author="Sayed Shaun",
     version=VERSION,
     packages=find_packages(),
