@@ -1,1 +1,1 @@
-from .models import HuggingFaceModel, GoogleGemini, OpenAI, OllamaLLM
+from openrag.models import HuggingFaceModel, GoogleGemini, OpenAI, OllamaLLM

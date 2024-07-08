@@ -28,7 +28,7 @@ from langchain_community.embeddings import OllamaEmbeddings
 
 
 
-class RagWithHuggingFaceModel:
+class HuggingFaceModel:
     def __init__(
             self,
             pdf_path: str,
@@ -151,7 +151,7 @@ class RagWithHuggingFaceModel:
         torch.cuda.empty_cache()
 
 
-class RagWithGoogleGemini:
+class GoogleGemini:
     def __init__(
             self,
             pdf_path: str,
@@ -206,7 +206,7 @@ class RagWithGoogleGemini:
         )
 
 
-class RagWithOpenAI:
+class OpenAI:
     def __init__(self, pdf_path: str, openai_api_key: SecretStr, temperature: float = 0.1) -> None:
         self._llm, embedding = self._openai(openai_api_key, temperature)
         raw_texts = pdf_loader(pdf_path)
@@ -241,7 +241,7 @@ class RagWithOpenAI:
 
 
 
-class RagWithOllamaLLM:
+class OllamaLLM:
     def __init__(
             self, 
             pdf_path: str, 
