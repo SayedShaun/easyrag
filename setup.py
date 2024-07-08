@@ -1,8 +1,7 @@
 from setuptools import setup, find_packages
 import subprocess
 
-subprocess.check_output(["git", "describe", "--always"])))
-VERSION = "1.0.0" 
+VERSION = subprocess.check_output(["git", "describe", "--always"]).strip().decode("utf-8")
 DESCRIPTION = 'OpenRAG Python Package'
 
 with open("README.md", "r", encoding="utf-8") as f:
