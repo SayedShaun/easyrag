@@ -4,7 +4,7 @@ import sys
 import torch
 from typing import Tuple
 from pydantic import SecretStr
-from easyrag._helper_function import (
+from easyrag.helper_function import (
     pdf_loader, 
     store_user_chat_history, 
     transform_and_store, 
