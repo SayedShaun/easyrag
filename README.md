@@ -17,6 +17,10 @@ To install rag, paste the link below into your terminal and press enter.
 ```bash
 pip install git+https://github.com/SayedShaun/easyrag.git
 ```
+or 
+```bash
+pip install easyrag-python
+```
 
 ## Usage
 
