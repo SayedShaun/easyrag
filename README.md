@@ -15,7 +15,7 @@ RAG is a Python package designed to facilitate information retrieval and generat
 To install rag, paste the link below into your terminal and press enter.
 
 ```bash
-pip install git+https://github.com/SayedShaun/easyrag.git
+pip install git+https://github.com/SayedShaun/easyrag-python.git
 ```
 or 
 ```bash
