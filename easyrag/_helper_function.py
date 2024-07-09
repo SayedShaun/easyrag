@@ -72,7 +72,7 @@ def store_user_chat_history()->List:
     return []
 
 
-def get_answer(llm_model, vector_store, query: str=None, chat: bool = False):
+def get_answer(llm_model, vector_store, query: str=None, chat_mode: bool = False):
     """
     This Python function retrieves answers using a conversational retrieval chain based on a language
     model and vector store, with an option for continuous chat interaction.
@@ -101,7 +101,7 @@ def get_answer(llm_model, vector_store, query: str=None, chat: bool = False):
         retriever=vector_store,
         return_source_documents=True,
     )
-    if chat and query==None:
+    if chat_mode and query==None:
         while True:
             query = input("USER: ").strip()
             while query == None:

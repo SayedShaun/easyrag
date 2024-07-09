@@ -122,12 +122,12 @@ class HuggingFaceModel:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat_mode: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            chat=chat
+            chat_mode=chat_mode
         )
         
         #clear memory cache    
@@ -169,12 +169,12 @@ class GoogleGemini:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat_mode: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            chat=chat
+            chat_mode=chat_mode
         )
 
 
@@ -192,12 +192,12 @@ class OpenAI:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat_mode: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            chat=chat
+            chat_mode=chat_mode
         )
 
 
@@ -226,12 +226,12 @@ class OllamaLLM:
         embedding = OllamaEmbeddings(model=self._embedding_model)
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat_mode: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            chat=chat
+            chat_mode=chat_mode
         )
 
 
