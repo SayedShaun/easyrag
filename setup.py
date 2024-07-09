@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name="openrag",
+    name="openrag-python",
     author="Sayed Shaun",
     version=VERSION,
     packages=find_packages(),
