@@ -129,7 +129,7 @@ class HuggingFaceModel:
             max_new_tokens=max_token,
             repetition_penalty=1,
             trust_remote_code=True,
-            do_sample=False
+            do_sample=True
         )
         
         llm = HuggingFacePipeline(pipeline=hf_pipeline)
@@ -139,12 +139,12 @@ class HuggingFaceModel:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            continuous_chat=continuous_chat
+            chat=chat
         )
         
         #clear memory cache    
@@ -197,12 +197,12 @@ class GoogleGemini:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            continuous_chat=continuous_chat
+            chat=chat
         )
 
 
@@ -231,12 +231,12 @@ class OpenAI:
         )
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            continuous_chat=continuous_chat
+            chat=chat
         )
 
 
@@ -265,10 +265,14 @@ class OllamaLLM:
         embedding = OllamaEmbeddings(model=self._embedding_model)
         return llm, embedding
 
-    def retrieve_answer(self, query: str=None, continuous_chat: bool = False):
+    def retrieve_answer(self, query: str=None, chat: bool = False):
         get_answer(
             llm_model=self._llm,
             vector_store=self._vector_store.as_retriever(),
             query=query,
-            continuous_chat=continuous_chat
+            chat=chat
         )
+
+
+# Export all classes
+__all__ = ['HuggingFaceModel', 'GoogleGemini', 'OpenAI', 'OllamaLLM']
