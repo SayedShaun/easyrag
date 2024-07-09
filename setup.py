@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 
 VERSION = "1.0.0"
-DESCRIPTION = 'OpenRAG Python Package'
+DESCRIPTION = 'EasyRAG Python Package'
 
 with open("README.md", "r", encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name="openrag-python",
+    name="easyrag-python",
     author="Sayed Shaun",
     version=VERSION,
     packages=find_packages(),
@@ -27,5 +27,4 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     python_requires=">=3.8",
-    
 )
