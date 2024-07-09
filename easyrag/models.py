@@ -94,7 +94,7 @@ class HuggingFaceModel:
             config=model_config,
             quantization_config=bnb_config,
             device_map="auto",
-            trust_remote_code=True,
+            trust_remote_code=trust_remote_code,
             cache_dir=os.getcwd()
         )
 
