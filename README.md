@@ -2,7 +2,7 @@
 
 # EasyRAG Python Package
 
-RAG is a Python package designed to facilitate information retrieval and generation tasks, particularly in natural language processing applications. With RAG, users can input a PDF file along with a Hugging Face model, enabling the extraction of relevant data from the PDF and responding to user queries based on the extracted information.
+EasyRAG is a Python package designed to facilitate information retrieval and generation tasks, particularly in natural language processing applications. With RAG, users can input a PDF file along with a Hugging Face model, enabling the extraction of relevant data from the PDF and responding to user queries based on the extracted information. The "EasyRAG" framework is designed for quick rag prototype and to check retrieval performance with different open source models, including Llama, Mistral, Phi, and other 1 to 10 billion parameter causal models depanding on the hardware. It also supports Googgle Gemini and OpenAi models through API call.
 
 ## Features
 
@@ -48,7 +48,7 @@ Bookkeeping, Exceptional communication, and Fluent in German.
 ```
 
 ## Bugs
-The "Rag" framework is designed for quick rag prototype and to check retrieval performance with different open source models, including Llama, Mistral, Phi, and other 1 to 10 billion parameter models. It also supports Googgle Gemini and OpenAi models through API call. All open-source models might not be compatible also the GoogleGemini and OpenAI classes are unstable at this moment.
+All open-source models might not be compatible at this moment. This package is specifically designed to work with causal language models often decoder-only models.
 
 ## Contributing
 
