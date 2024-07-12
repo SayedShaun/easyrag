@@ -57,7 +57,7 @@ def transform_and_store(raw_texts, embedding, db_name=None):
     """
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
-        chunk_overlap=20
+        chunk_overlap=200
     )
     chunk_texts = text_splitter.split_text(raw_texts)
     vector_store = FAISS.from_texts(
