@@ -10,3 +10,5 @@ faiss-cpu
 sentence-transformers
 bitsandbytes
 accelerate
+youtube-transcript-api
+pytube

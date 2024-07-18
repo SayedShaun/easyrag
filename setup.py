@@ -22,7 +22,9 @@ setup(
         "faiss-cpu",
         "sentence-transformers",
         "bitsandbytes",
-        "accelerate"
+        "accelerate",
+        "youtube-transcript-api",
+        "pytube"
     ],
     long_description=long_description,
     long_description_content_type='text/markdown',
