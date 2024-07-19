@@ -44,7 +44,7 @@ class HuggingFaceModel:
             ) -> None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         if device.type == "cuda":
-            self._llm, self._embedding = self._huggingface_llm(
+            self._llm, self._embedding = self._huggingface(
                 model_id,
                 embedding_model,
                 temperature,
@@ -61,7 +61,7 @@ class HuggingFaceModel:
                 or Use API Based Model(E.g. GoogleGemini, OpenAI)"""
                 )
 
-    def _huggingface_llm(
+    def _huggingface(
             self, model_id: str,
             embedding_model: str,
             temperature: float,
@@ -266,12 +266,11 @@ class OllamaLLM:
         self._embedding_model = embedding_model
         self._chat_history = store_user_chat_history()
         try:
-            self._llm, self._embedding = self._ollama_local_llm(temperature)
+            self._llm, self._embedding = self._ollama_local(temperature)
         except Exception as e:
-            print("Make sure Ollama is running on your system.")
-            sys.exit(1)
+            raise RuntimeError("Make sure Ollama is running on your system.")
 
-    def _ollama_local_llm(self, temperature: float)->Tuple:
+    def _ollama_local(self, temperature: float)->Tuple:
         llm = Ollama(
             model=self._model, 
             temperature=temperature
