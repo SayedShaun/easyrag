@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 DESCRIPTION = 'EasyRAG Python Package'
 
 with open("README.md", "r", encoding="utf-8") as f:
