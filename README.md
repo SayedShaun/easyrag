@@ -47,7 +47,7 @@ Bookkeeping, Exceptional communication, and Fluent in German.
 ```
 
 ## Bugs
-All open-source models might not be compatible at this moment. This package is specifically designed to work with causal language models often called decoder-only models. Gemini and OpenAI should work fine.
+All open-source models might not be compatible at this moment. This package is specifically designed to work with causal language models often called decoder-only models.
 
 ## Contributing
 
