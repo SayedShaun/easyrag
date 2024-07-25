@@ -27,14 +27,13 @@ pip install easyrag-python
 Using RAG is straightforward. Here's a basic example of how to use it:
 
 ```python
-from easyrag import HuggingFaceModel
+from easyrag.models import HuggingFaceModel
 
 # Initialize and Provide a PDF file and Hugging Face model
 rag = HuggingFaceModel(
     model_id="meta-llama/Meta-Llama-3-8B-Instruct",
-    hf_token="your huggingface token",
-    pdf_path="sample resume.pdf"
-)
+    hf_token="your huggingface token"
+    ).from_pdf(pdf_path="sample resume.pdf")
 
 # Retrieve data from the PDF
 rag.retrieve_answer("what skills she has?")
